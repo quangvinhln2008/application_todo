@@ -1,9 +1,10 @@
 const User = require('../models/user')
+const helper = require('../ultility/helper')
 
 exports.login = (req, res) => {
     User.find({        
         email: req.body.email,
-        password: req.body.password
+        password: helper.hashPassword(req.body.password)
     })
         .then(user => {
             res.json(user)

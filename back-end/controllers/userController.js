@@ -1,5 +1,6 @@
 const { response } = require("express");
 const User = require("../models/user");
+const helper = require("../ultility/helper");
 
 exports.getAllUser = async (req, res) => {
     const users = await User.find({});
@@ -21,6 +22,9 @@ exports.getUserById = async (req, res) =>{
 }
 exports.addNewUser = async (req, res) => {
     const newUser = new User(req.body);
+    console.log(req.body.password)
+    newUser.password = helper.hashPassword(req.body.password);
+
     try {
         await newUser.save();
         res.json(newUser)
