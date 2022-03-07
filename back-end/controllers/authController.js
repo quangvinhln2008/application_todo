@@ -1,3 +1,4 @@
+
 const User = require('../models/user')
 const Role = require('../models/role');
 
@@ -23,6 +24,7 @@ exports.signup = (req, res) => {
       email: req.body.email,
       password: helper.hashPassword(req.body.password)
     });
+
     user.save((err, user) => {
       if (err) {
         res.status(500).send({ message: err });

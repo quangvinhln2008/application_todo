@@ -14,8 +14,7 @@ authRouter.use((req, res, next) => {
 });
 
 authRouter.post("/signup", [
-    verifySignUp.checkDuplicateEmail,
-    verifySignUp.checkRolesExisted
+    verifySignUp.checkDuplicateEmail
   ],
   authController.signup
 );

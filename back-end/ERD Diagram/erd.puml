@@ -18,13 +18,11 @@
    entity Project {
       * _id: string <<PK>>
       --
-      * status: enum("Done", "In Progress", "Cancel")
-      * projectName : string
-
-      --
       * projectId: string
+      * projectName : string
+      * status: enum("Done", "In Progress", "Cancel")
+      --
       * createdBy: ObjectId
-      * userRole: ObjectId
    }
 
    entity Task {
@@ -42,10 +40,13 @@
       * userRole: ObjectId
    }
 
-    User ||--|{ Project
-    Project ||--|{ Task
-    User }|--|| Task
-    Role ||--|| Task
-    Task |o--o| Task
+   User ||--|| Role
+
+   User ||--|{ Project
+   
+   Project ||--|{ Task
+   User ||--|| Task
+   Role ||--|| Task
+   Task |o--o| Task
 
 @enduml

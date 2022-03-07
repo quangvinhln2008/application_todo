@@ -1,6 +1,9 @@
 const User = require("../models/user");
 const Role = require("../models/role");
 
+const db = require("../models");
+const ROLES = db.ROLES;
+
 exports.checkDuplicateEmail = (req, res, next) => {
   // Email
   User.findOne({
@@ -18,17 +21,17 @@ exports.checkDuplicateEmail = (req, res, next) => {
   });
 };
 
-exports.checkRolesExisted = (req, res, next) => {
-  if (req.body.roles) {
-    for (let i = 0; i < req.body.roles.length; i++) {
-      if (!Role.includes(req.body.roles[i])) {
-        res.status(400).send({
-          message: `Failed! Role ${req.body.roles[i]} does not exist!`,
-        });
-        return;
-      }
-    }
-  }
-  next();
-};
+// exports.checkRolesExisted = (req, res, next) => {
+//   if (req.body.roles) {
+//     for (let i = 0; i < req.body.roles.length; i++) {
+//       if (!ROLES.includes(req.body.roles[i])) {
+//         res.status(400).send({
+//           message: `Failed! Role ${req.body.roles[i]} does not exist!`,
+//         });
+//         return;
+//       }
+//     }
+//   }
+//   next();
+// };
 
