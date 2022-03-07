@@ -24,7 +24,7 @@ exports.signup = (req, res) => {
       email: req.body.email,
       password: helper.hashPassword(req.body.password)
     });
-
+    
     user.save((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -40,7 +40,9 @@ exports.signup = (req, res) => {
               res.status(500).send({ message: err });
               return;
             }
+
             user.roles = roles.map(role => role._id);
+
             user.save(err => {
               if (err) {
                 res.status(500).send({ message: err });

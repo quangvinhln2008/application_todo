@@ -1,4 +1,5 @@
 const express = require("express");
+const checkDuplicateProject = require("../middleware/checkDuplicationProject")
 
 const projectRouter = express.Router();
 const projectController = require("../controllers/projectController");
@@ -10,12 +11,16 @@ projectRouter.get("/", projectController.getAllProject)
 // projectRouter.get('/project/:id', projectController.getprojectById)
 
 //Add new project
-projectRouter.post('/', projectController.addNewProject)
+projectRouter.post('/', [
+    checkDuplicateProject.checkDuplicateProjectId
+],
+    projectController.addNewProject
+);
 
 // //Update project
-// projectRouter.patch('/project/:id', projectController.updateproject)
+projectRouter.patch('/:projectId', projectController.updateProject)
 
 // //Delete project
-// projectRouter.delete('/project/:id', projectController.deleteproject)
+projectRouter.delete('/:projectId', projectController.deleteProject)
 
 module.exports = projectRouter

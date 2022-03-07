@@ -25,12 +25,10 @@ exports.addNewProject = async (req, res) => {
   const newProject = new Project({
     projectId: req.body.projectId,
     projectName: req.body.projectName,
-    status: req.body.status,
-    createdBy: req.body.createdBy
+    status: req.body.status
   });
-console.log(newProject)
 
-  await newProject.save((err) => {
+  await newProject.save((err, newProject) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -48,14 +46,14 @@ console.log(newProject)
           }
 
           newProject.createdBy = users.map((user) => user._id);
-        
+
           newProject.save((err) => {
             if (err) {
               res.status(500).send({ message: err });
               return;
             }
 
-            res.send({ message: "Project was registered successfully!" });
+            res.send({ message: "Project was created successfully!" });
           });
         }
       );
@@ -63,29 +61,90 @@ console.log(newProject)
   });
 };
 
-// exports.updateUser = async (req, res) => {
-//   User.findById(req.params.id).then((user) => {
-//     user.userName = req.body.userName;
-//     user.password = req.body.password;
-//     user.email = req.body.email;
+exports.updateProject = async (req, res) => {
+  await Project.find({
+    projectId: req.params.projectId
+  }, (err, project) => {
+    if (err) res.status(500).send({ message: err });
 
-//     user
-//       .save()
-//       .then(() => {
-//         res.json("Update complete");
-//       })
-//       .catch((err) => {
-//         res.status(500).send(err);
-//       });
-//   });
-// };
+    project.projectName = req.body.projectName;
+    project.status = req.body.status;
+    
+    project.save((err, project) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
+      if (req.body.createdBy) {
+        User.find(
+          {
+            userName: { $in: req.body.createdBy },
+          },
+          (err, users) => {
+            if (err) {
+              res.status(500).send({ message: err });
+              return;
+            }
 
-// exports.deleteUser = async (req, res) => {
-//   User.findByIdAndDelete(req.params.id)
-//     .then(() => {
-//       res.json("User deleted");
-//     })
-//     .catch((err) => {
-//       res.status(500).send(err);
-//     });
-// };
+            project.createdBy = users.map((user) => user._id);
+
+            project.save((err) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+
+              res.send({ message: "Project was updated successfully!" });
+            });
+          }
+        );
+      }
+    })
+  })
+  // .then((project) => {
+  //   project.projectName = req.body.projectName;
+  //   project.status = req.body.status;
+
+  //   project.save((err, project) => {
+  //     if (err) {
+  //       res.status(500).send({ message: err });
+  //       return;
+  //     }
+
+  //     if (req.body.createdBy) {
+  //       User.find(
+  //         {
+  //           userName: { $in: req.body.createdBy },
+  //         },
+  //         (err, users) => {
+  //           if (err) {
+  //             res.status(500).send({ message: err });
+  //             return;
+  //           }
+
+  //           project.createdBy = users.map((user) => user._id);
+
+  //           project.save((err) => {
+  //             if (err) {
+  //               res.status(500).send({ message: err });
+  //               return;
+  //             }
+
+  //             res.send({ message: "Project was updated successfully!" });
+  //           });
+  //         }
+  //       );
+  //     }
+  //   })
+  // });
+};
+
+exports.deleteProject = async (req, res) => {
+  Project.deleteOne({ projectId: req.params.projectId })
+    .then(() => {
+      res.json("Project deleted");
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
