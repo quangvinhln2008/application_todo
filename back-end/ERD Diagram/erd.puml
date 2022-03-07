@@ -1,0 +1,51 @@
+@startuml TodoList
+    entity Role{
+        * _id: string
+        --
+        * roleName: string
+    }
+
+   entity User {
+      * _id: integer <<PK>>
+      --
+      * userName : string
+      * email: string
+      * password : string
+      --
+      * userRole : ObjectId
+   }
+
+   entity Project {
+      * _id: string <<PK>>
+      --
+      * status: enum("Done", "In Progress", "Cancel")
+      * projectName : string
+
+      --
+      * projectId: string
+      * createdBy: ObjectId
+      * userRole: ObjectId
+   }
+
+   entity Task {
+      * _id : integer <<PK>>
+      --
+      * taskId: string
+      * taskName: string
+      * description: string
+      * status: enum("Done", "In Progress", "Cancel")
+      * isDone: boolean
+      * linkTaskId: integer
+      --
+      * belongProject : ObjectId
+      * assignTo : ObjectId
+      * userRole: ObjectId
+   }
+
+    User ||--|{ Project
+    Project ||--|{ Task
+    User }|--|| Task
+    Role ||--|| Task
+    Task |o--o| Task
+
+@enduml
