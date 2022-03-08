@@ -11,9 +11,9 @@ userRouter.get('/user/:userName', userController.getUserById)
 userRouter.post('/user', userController.addNewUser)
 
 //Update user
-userRouter.patch('/user/:id', userController.updateUser)
+userRouter.patch('/user/edit/:userName', userController.updateUser)
 
 //Delete user
-userRouter.delete('/user/:id', userController.deleteUser)
+userRouter.delete('/user/:userName', userController.deleteUser)
 
 module.exports = userRouter

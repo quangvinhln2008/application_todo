@@ -67,7 +67,7 @@ exports.updateProject = async (req, res) => {
 
   Project.findOne(
     {
-      projectId: req.params.projectId,
+      projectId: req.params.projectId.toUpperCase(),
     },
     (err, project) => {
       if (err) res.status(500).send({ message: err });
@@ -109,42 +109,6 @@ exports.updateProject = async (req, res) => {
       });
     }
   );
-  // .then((project) => {
-  //   project.projectName = req.body.projectName;
-  //   project.status = req.body.status;
-
-  //   project.save((err, project) => {
-  //     if (err) {
-  //       res.status(500).send({ message: err });
-  //       return;
-  //     }
-
-  //     if (req.body.createdBy) {
-  //       User.find(
-  //         {
-  //           userName: { $in: req.body.createdBy },
-  //         },
-  //         (err, users) => {
-  //           if (err) {
-  //             res.status(500).send({ message: err });
-  //             return;
-  //           }
-
-  //           project.createdBy = users.map((user) => user._id);
-
-  //           project.save((err) => {
-  //             if (err) {
-  //               res.status(500).send({ message: err });
-  //               return;
-  //             }
-
-  //             res.send({ message: "Project was updated successfully!" });
-  //           });
-  //         }
-  //       );
-  //     }
-  //   })
-  // });
 };
 
 exports.deleteProject = async (req, res) => {

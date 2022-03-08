@@ -3,7 +3,7 @@ const Task = require("../models/task")
 exports.checkDuplicateTaskId = (req, res, next) => {
     // User name
     Task.findOne({
-      TaskId: req.body.TaskId,
+      taskId: req.body.taskId
     }).exec((err, task) => {
       if (err) {
         res.status(500).send({ message: err });

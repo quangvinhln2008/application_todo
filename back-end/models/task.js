@@ -30,6 +30,13 @@ const taskSchema = new Schema({
             required: false
         }
     ],
+    belongTo:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Project",
+            required: true
+        }
+    ],
     assignTo:[
         {
             type: mongoose.Schema.Types.ObjectId,

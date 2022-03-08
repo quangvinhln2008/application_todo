@@ -36,7 +36,9 @@ exports.addNewUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-    User.findById(req.params.id)
+    User.findOne({
+        userName: req.params.userName.toLowerCase()
+    })
         .then(user => {
             user.userName = req.body.userName;
             user.password = req.body.password;
@@ -53,7 +55,9 @@ exports.updateUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) =>{
-    User.findByIdAndDelete(req.params.id)
+    User.deleteOne({
+        userName: req.params.userName
+    })
     .then(() =>{
         res.json('User deleted')
     })

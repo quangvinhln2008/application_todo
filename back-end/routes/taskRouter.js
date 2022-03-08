@@ -8,19 +8,22 @@ const taskController = require("../controllers/taskController");
 taskRouter.get("/", taskController.getAllTask)
 
 // //Get task by id
-// taskRouter.get('/task/:id', taskController.gettaskById)
+taskRouter.get('/:taskId', taskController.getTaskById)
 
-// //Add new task
-// taskRouter.post('/', [
-//     checkDuplicateTask.checkDuplicatetaskId
-// ],
-//     taskController.addNewTask
-// );
+// // //Get task by projectId
+// taskRouter.get('/:projectId/task', taskController.getTaskByProjectId)
 
-// // //Update task
-// taskRouter.patch('/:taskId', taskController.updateTask)
+//Add new task
+taskRouter.post('/', [
+    checkDuplicateTask.checkDuplicateTaskId
+],
+    taskController.addNewTask
+);
+
+// //Update task
+taskRouter.patch('/edit/:taskId', taskController.updateTask)
 
 // // //Delete task
-// taskRouter.delete('/:taskId', taskController.deleteTask)
+taskRouter.delete('/:taskId', taskController.deleteTask)
 
 module.exports = taskRouter

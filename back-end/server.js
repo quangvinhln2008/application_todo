@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const userRouter = require('./routes/userRouter');
 const projectRouter = require('./routes/projectRouter');
-const tasktRouter = require('./routes/taskRouter');
+const taskRouter = require('./routes/taskRouter');
 const authRouter = require('./routes/authRouter');
 
 const roleController = require('./controllers/roleController')
@@ -42,7 +42,7 @@ app.use('/', userRouter);
 app.use('/project', projectRouter);
 
 //use task router in /routes/tasktRouter.js
-app.use('/task', tasktRouter);
+app.use('/task', taskRouter);
 
 
 //app listen port 5000

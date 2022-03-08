@@ -2,6 +2,7 @@ const Project = require("../models/project");
 const User = require("../models/user");
 const Task = require("../models/task");
 const Role = require("../models/role");
+const { default: mongoose } = require("mongoose");
 
 exports.getAllTask = async (req, res) => {
   await Task.find()
@@ -27,86 +28,207 @@ exports.getTaskById = async (req, res) => {
     });
 };
 
-exports.addNewProject = async (req, res) => {
-  const newProject = new Project({
-    projectId: req.body.projectId,
-    projectName: req.body.projectName,
+
+exports.getTaskByProjectId = async (req, res) => {
+
+  Project.findOne({
+    projectId: req.params.projectId
+  }, ((err, project) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return
+    }
+
+    Task.find({
+      belongTo: mongoose.Types.ObjectId(project._id)
+    })
+      .populate("belongTo")
+      .populate("assignTo")
+      .populate("userRole")
+      .exec((err, task) => {
+        if (err) res.status(500).send({ message: err });
+        res.json(task);
+      });
+  })
+  )
+}
+
+exports.addNewTask = async (req, res) => {
+  const newTask = new Task({
+    taskId: req.body.taskId,
+    taskName: req.body.taskName,
+    decription: req.body.decription,
     status: req.body.status,
+    isDone: req.body.isDone
   });
 
-  await newProject.save((err, newProject) => {
+  await newTask.save((err, newTask) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
     }
-
-    if (req.body.createdBy) {
-      User.find(
+    //save belongTo project
+    if (req.body.belongTo) {
+      Project.find(
         {
-          userName: { $in: req.body.createdBy },
+          projectId: { $in: req.body.belongTo },
         },
-        (err, users) => {
+        (err, projects) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
 
-          newProject.createdBy = users.map((user) => user._id);
+          newTask.belongTo = projects.map((project) => project._id);
 
-          newProject.save((err) => {
+          newTask.save((err, newTask) => {
             if (err) {
               res.status(500).send({ message: err });
               return;
             }
+            //save assign user to task
+            if (req.body.assignTo) {
+              User.find(
+                {
+                  userName: { $in: req.body.assignTo },
+                },
+                (err, users) => {
+                  if (err) {
+                    res.status(500).send({ message: err });
+                    return;
+                  }
 
-            res.send({ message: "Project was created successfully!" });
+                  newTask.assignTo = users.map((user) => user._id);
+
+                  newTask.save((err, newTask) => {
+                    if (err) {
+                      res.status(500).send({ message: err });
+                      return;
+                    }
+                    //save user role
+                    if (req.body.userRole) {
+                      Role.find(
+                        {
+                          roleName: { $in: req.body.userRole },
+                        },
+                        (err, roles) => {
+                          if (err) {
+                            res.status(500).send({ message: err });
+                            return;
+                          }
+
+                          newTask.userRole = roles.map((role) => role._id);
+
+                          newTask.save((err) => {
+                            if (err) {
+                              res.status(500).send({ message: err });
+                              return;
+                            }
+                          });
+                        }
+                      );
+                    }
+                  });
+                }
+              );
+            }
           });
         }
       );
     }
+    res.send({ message: "Task was created successfully!" });
   });
+
 };
 
-exports.updateProject = async (req, res) => {
-  let projectFind = new Project();
+exports.updateTask = async (req, res) => {
+  let taskFind = new Task();
 
-  Project.findOne(
+  Task.findOne(
     {
-      projectId: req.params.projectId,
+      taskId: req.params.taskId.toUpperCase(),
     },
-    (err, project) => {
+    (err, task) => {
       if (err) res.status(500).send({ message: err });
 
-      projectFind = project;
+      taskFind = task;
 
-      projectFind.projectName = req.body.projectName;
-      projectFind.status = req.body.status;
+      taskFind.taskName = req.body.taskName;
+      taskFind.status = req.body.status;
+      taskFind.decription = req.body.decription;
+      taskFind.isDone = req.body.isDone;
 
-      projectFind.save((err, project) => {
+      taskFind.save((err, task) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
         }
-        if (req.body.createdBy) {
-          User.find(
+        if (req.body.belongTo) {
+          Project.find(
             {
-              userName: { $in: req.body.createdBy },
+              projectId: { $in: req.body.belongTo },
             },
-            (err, users) => {
+            (err, projects) => {
               if (err) {
                 res.status(500).send({ message: err });
                 return;
               }
 
-              project.createdBy = users.map((user) => user._id);
+              task.belongTo = projects.map((project) => project._id);
 
-              project.save((err) => {
+              task.save((err, task) => {
                 if (err) {
                   res.status(500).send({ message: err });
                   return;
                 }
+                //save assign user to task
+                if (req.body.assignTo) {
+                  User.find(
+                    {
+                      userName: { $in: req.body.assignTo },
+                    },
+                    (err, users) => {
+                      if (err) {
+                        res.status(500).send({ message: err });
+                        return;
+                      }
 
-                res.send({ message: "Project was updated successfully!" });
+                      task.assignTo = users.map((user) => user._id);
+
+                      task.save((err, task) => {
+                        if (err) {
+                          res.status(500).send({ message: err });
+                          return;
+                        }
+                        //save user role
+                        if (req.body.userRole) {
+                          Role.find(
+                            {
+                              roleName: { $in: req.body.userRole },
+                            },
+                            (err, roles) => {
+                              if (err) {
+                                res.status(500).send({ message: err });
+                                return;
+                              }
+
+                              task.userRole = roles.map((role) => role._id);
+
+                              task.save((err) => {
+                                if (err) {
+                                  res.status(500).send({ message: err });
+                                  return;
+                                }
+
+                                res.send({ message: "Task was updated successfully!" });
+                              });
+                            }
+                          );
+                        }
+                      });
+                    }
+                  );
+                }
               });
             }
           );
@@ -114,48 +236,14 @@ exports.updateProject = async (req, res) => {
       });
     }
   );
-  // .then((project) => {
-  //   project.projectName = req.body.projectName;
-  //   project.status = req.body.status;
-
-  //   project.save((err, project) => {
-  //     if (err) {
-  //       res.status(500).send({ message: err });
-  //       return;
-  //     }
-
-  //     if (req.body.createdBy) {
-  //       User.find(
-  //         {
-  //           userName: { $in: req.body.createdBy },
-  //         },
-  //         (err, users) => {
-  //           if (err) {
-  //             res.status(500).send({ message: err });
-  //             return;
-  //           }
-
-  //           project.createdBy = users.map((user) => user._id);
-
-  //           project.save((err) => {
-  //             if (err) {
-  //               res.status(500).send({ message: err });
-  //               return;
-  //             }
-
-  //             res.send({ message: "Project was updated successfully!" });
-  //           });
-  //         }
-  //       );
-  //     }
-  //   })
-  // });
 };
 
-exports.deleteProject = async (req, res) => {
-  Project.deleteOne({ projectId: req.params.projectId })
+exports.deleteTask = async (req, res) => {
+  Task.deleteOne({
+    taskId: req.params.taskId.toUpperCase()
+  })
     .then(() => {
-      res.json("Project deleted");
+      res.json("Task was deleted");
     })
     .catch((err) => {
       res.status(500).send(err);
