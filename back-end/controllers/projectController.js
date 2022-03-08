@@ -62,15 +62,19 @@ exports.addNewProject = async (req, res) => {
 };
 
 exports.updateProject = async (req, res) => {
-  await Project.find({
+  let projectFind = new Project;
+
+  Project.findOne({
     projectId: req.params.projectId
   }, (err, project) => {
     if (err) res.status(500).send({ message: err });
+   
+    projectFind = project;
 
-    project.projectName = req.body.projectName;
-    project.status = req.body.status;
+    projectFind.projectName = req.body.projectName;
+    projectFind.status = req.body.status
     
-    project.save((err, project) => {
+    projectFind.save((err, project) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
