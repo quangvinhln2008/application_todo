@@ -6,7 +6,7 @@ const userController = require("../controllers/userController");
 userRouter.get("/user", userController.getAllUser)
 
 //Get user by id
-userRouter.get('/user/:id', userController.getUserById)
+userRouter.get('/user/:userName', userController.getUserById)
 //Add new user
 userRouter.post('/user', userController.addNewUser)
 

@@ -1,24 +1,29 @@
 const Project = require("../models/project");
 const User = require("../models/user");
+const Task = require("../models/task");
 const Role = require("../models/role");
 
-exports.getAllProject = async (req, res) => {
-  await Project.find({})
-    .populate("createdBy")
-    .exec((err, project) => {
+exports.getAllTask = async (req, res) => {
+  await Task.find()
+    .populate("belongTo")
+    .populate("assignTo")
+    .populate("userRole")
+    .exec((err, task) => {
       if (err) res.status(500).send({ message: err });
-      res.json(project);
+      res.json(task);
     });
 };
 
-exports.getProjectById = async (req, res) => {
-  await Project.findOne({
-    projectId: req.params.projectId.toUpperCase()
+exports.getTaskById = async (req, res) => {
+  await Task.findOne({
+    taskId: req.params.taskId.toUpperCase(),
   })
-    .populate("createdBy")
-    .exec((err, project) => {
+    .populate("belongTo")
+    .populate("assignTo")
+    .populate("userRole")
+    .exec((err, task) => {
       if (err) res.status(500).send({ message: err });
-      res.json(project);
+      res.json(task);
     });
 };
 

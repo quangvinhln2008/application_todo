@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 
 const userRouter = require('./routes/userRouter');
 const projectRouter = require('./routes/projectRouter');
+const tasktRouter = require('./routes/taskRouter');
+const authRouter = require('./routes/authRouter');
+
 const roleController = require('./controllers/roleController')
 
-const authRouter = require('./routes/authRouter');
 //read file .env
 const dotenv = require('dotenv');
 dotenv.config();
@@ -38,6 +40,9 @@ app.use('/', userRouter);
 
 //use project router in /routes/projectRouter.js
 app.use('/project', projectRouter);
+
+//use task router in /routes/tasktRouter.js
+app.use('/task', tasktRouter);
 
 
 //app listen port 5000

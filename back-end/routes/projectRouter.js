@@ -7,8 +7,8 @@ const projectController = require("../controllers/projectController");
 //Get all list project
 projectRouter.get("/", projectController.getAllProject)
 
-// //Get project by id
-// projectRouter.get('/project/:id', projectController.getprojectById)
+//Get project by id
+projectRouter.get('/:projectId', projectController.getProjectById)
 
 //Add new project
 projectRouter.post('/', [

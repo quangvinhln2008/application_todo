@@ -33,9 +33,9 @@
       * description: string
       * status: enum("Done", "In Progress", "Cancel")
       * isDone: boolean
-      * linkTaskId: integer
       --
-      * belongProject : ObjectId
+      * linkTaskId: ObjectId
+      * belongTo : ObjectId
       * assignTo : ObjectId
       * userRole: ObjectId
    }

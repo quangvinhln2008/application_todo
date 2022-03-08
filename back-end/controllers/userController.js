@@ -12,7 +12,9 @@ exports.getAllUser = async (req, res) => {
 }
 
 exports.getUserById = async (req, res) =>{
-    User.findById(req.params.id)
+    User.findOne({
+        userName : req.params.userName.toUpperCase()
+    })
         .then(user =>{
             res.json(user)
         })
