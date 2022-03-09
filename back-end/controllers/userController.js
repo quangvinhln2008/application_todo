@@ -3,6 +3,7 @@ const User = require("../models/user");
 const helper = require("../ultility/helper");
 
 exports.getAllUser = async (req, res) => {
+    debugger
     const users = await User.find({});
     try {
         res.json(users)
