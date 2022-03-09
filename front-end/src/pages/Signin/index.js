@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-const Login = () => {
+const Signin = () => {
   return (
     <form className="box" method="POST">
-      <p className="box-title">TODO APP</p>
+      <h1 className="box-title">TODO APP</h1>  
       <span className="box-decription">Enter your account to loggin</span>
       <div className="box-input">
         <label for="email">Email:</label>
@@ -14,11 +14,11 @@ const Login = () => {
         <input type="text" name="password" id="password"></input>
       </div>
       <div className="button-group">
-        <button className="button signin">Sign In</button>
+        <button className="button button_signin">Sign In</button>
         <div className="link-group">
-          <a>Forgot password</a>
+          <a href="#">Forgot password</a>
           <span>
-            You don't have account? <a>Create new account</a>
+            You don't have account? <a href="#">Sign up here</a>
           </span>
         </div>
       </div>
@@ -26,4 +26,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signin;
