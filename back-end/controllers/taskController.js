@@ -28,11 +28,10 @@ exports.getTaskById = async (req, res) => {
     });
 };
 
-
 exports.getTaskByProjectId = async (req, res) => {
 
   Project.findOne({
-    projectId: req.params.projectId
+    projectId: req.params.projectId.toUpperCase()
   }, ((err, project) => {
     if (err) {
       res.status(500).send({ message: err });
